@@ -45,8 +45,8 @@ public class Input {
     }
 
     public double getVolumeComAr() {
-        final double epsilonFlow = 0.01; // m^3 por ciclo quando volume==0
-        return (volume <= 0.0) ? epsilonFlow : volume;
+        final double fluxoDeAr = 0.01; // m^3 por ciclo quando volume==0
+        return (volume <= 0.0) ? fluxoDeAr : volume;
     }
 
     private void atualizarPressao() {

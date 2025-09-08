@@ -23,9 +23,9 @@ class Display extends JFrame {
         setVisible(true);
     }
 
-    // Atualiza somente quando passar de múltiplos de 3 m^3
+    // Atualiza quando acumulado += 1m^3
     public void apresentar(double m3, double pressaoBar) {
-        int marco = (int) Math.floor(m3 / 3.0);
+        int marco = (int) Math.floor(m3 / 1.0);
         if (marco != ultimoMarco3m3) {
             ultimoMarco3m3 = marco;
             desenharValores(m3, pressaoBar);
