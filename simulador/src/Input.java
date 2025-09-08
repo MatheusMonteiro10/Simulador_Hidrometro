@@ -44,9 +44,22 @@ public class Input {
         return pressao;
     }
 
+    public double getVolumeComAr() {
+        final double epsilonFlow = 0.01; // m^3 por ciclo quando volume==0
+        return (volume <= 0.0) ? epsilonFlow : volume;
+    }
+
     private void atualizarPressao() {
         double p = (tamEntradaCano > 0) ? volume / (pow(tamEntradaCano,2)) : 0.0;
         this.pressao = clamp(p, 0.0, 16.0); //máximo de 16 bars
+    }
+
+    private double valorAleatorio(double min, double max) {
+        return min + random.nextDouble() * (max - min);
+    }
+
+    public void randomizarVolume() {
+        setVolume(valorAleatorio(MIN_VOLUMEM3, MAX_VOLUMEM3));
     }
 
 }
