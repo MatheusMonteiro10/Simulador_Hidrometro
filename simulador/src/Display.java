@@ -62,7 +62,6 @@ class Display extends JFrame {
 // Rodapé
             g.setFont(new Font("SansSerif", Font.PLAIN, 14));
             g.setColor(new Color(0,0,0,180));
-            g.drawString("Plotado ao atingir múltiplos de 3 m³", 40, H - 40);
         } finally {
             g.dispose();
         }
