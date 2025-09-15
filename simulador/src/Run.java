@@ -7,7 +7,7 @@ public class Run {
         Display display = new Display();
         Hidrometro hidrometro = new Hidrometro(input, medidor, display);
 
-        // Thread da simulação
+        // simulação
         Thread simulacao = new Thread(() -> {
             try {
                 hidrometro.executarCiclo();
@@ -17,7 +17,7 @@ public class Run {
         });
         simulacao.start();
 
-        // Thread de entrada do usuário
+        // entrada do usuário
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.print("Digite novo volume (cm³): ");
