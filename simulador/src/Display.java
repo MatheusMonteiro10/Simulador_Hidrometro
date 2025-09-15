@@ -30,7 +30,12 @@ class Display extends JFrame {
             ultimoMarco = marco;
             desenharValores(m3, pressaoBar);
             repaint();
+
+            // Salva a imagem atual no arquivo padrao (como antes)
             salvarJPEG();
+
+            // Salva a imagem também na pasta do SUAP com nome adequado
+            salvarJPEGComNome(marco);
         }
     }
 
@@ -119,6 +124,28 @@ class Display extends JFrame {
             File arquivo = new File("hidrometro_atualizado.jpg");
             ImageIO.write(atual, "jpg", arquivo);
         } catch (IOException ignored) {}
+    }
+
+    private void salvarJPEGComNome(int metroCubico) {
+        try {
+            String matriculaSUAP = "202111250035";
+            String nomePasta = "Medições_" + matriculaSUAP;
+            File pasta = new File(nomePasta);
+            if (!pasta.exists()) {
+                pasta.mkdirs();
+            }
+
+            if (metroCubico < 1) return;
+
+            // Mantém valor entre 1 e 99
+            int numeroImagem = ((metroCubico - 1) % 99) + 1;
+
+            String nomeArquivo = String.format("%02d.jpeg", numeroImagem);
+            File arquivo = new File(pasta, nomeArquivo);
+            ImageIO.write(atual, "jpg", arquivo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

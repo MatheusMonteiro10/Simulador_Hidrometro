@@ -58,8 +58,9 @@ public class Input {
         return min + random.nextDouble() * (max - min);
     }
 
+    /*
     public void randomizarVolume() {
         setVolume(valorAleatorio(MIN_VOLUMEM3, MAX_VOLUMEM3));
     }
-
+    */
 }
