@@ -31,10 +31,8 @@ class Display extends JFrame {
             desenharValores(m3, pressaoBar);
             repaint();
 
-            // Salva a imagem atual no arquivo padrao (como antes)
             salvarJPEG();
 
-            // Salva a imagem também na pasta do SUAP com nome adequado
             salvarJPEGComNome(marco);
         }
     }
