@@ -10,15 +10,15 @@ class Display extends JFrame {
     private BufferedImage atual;
     private int ultimoMarco = -1; // controla atualização
 
-    private final int W = 720;
-    private final int H = 480;
+    private final int largura = 720;
+    private final int altura = 480;
 
     public Display() {
         super("Hidrômetro - Simulador");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(W, H);
+        setSize(largura, altura);
         setLocationRelativeTo(null);
-        carregarOuCriarBase();
+        criarBase();
         this.atual = deepCopy(base);
         setVisible(true);
     }
@@ -51,7 +51,7 @@ class Display extends JFrame {
 
             g.setColor(Color.RED);
 
-            // ----- Valor de m³ -----
+            // Valor de m³
             String textoM3 = String.format("%.2f", m3);
             FontMetrics fmM3 = g.getFontMetrics();
             int textWidthM3 = fmM3.stringWidth(textoM3);
@@ -64,7 +64,7 @@ class Display extends JFrame {
             g.setFont(unidadeFont);
             g.drawString("m³", posX_m3 + textWidthM3 + 10, posY_m3 - 5); // Pequeno ajuste vertical
 
-            // ----- Valor da pressão -----
+            // Valor da pressão
             g.setFont(valorFont);
             String textoPressao = String.format("%.2f", pressaoBar);
             FontMetrics fmPressao = g.getFontMetrics();
@@ -84,33 +84,33 @@ class Display extends JFrame {
     }
 
 
-    private void carregarOuCriarBase() {
+    private void criarBase() {
         try {
-            File f = new File("C:/Users/pc/Downloads/hidrometro3.jpg");  // Caminho para o JPEG enviado
+            File f = new File("C:/Users/pc/Downloads/hidrometro3.jpg");  // Caminho JPEG
             if (f.exists()) {
                 base = ImageIO.read(f);
-                if (base.getWidth() != W || base.getHeight() != H) {
-                    BufferedImage resized = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
+                if (base.getWidth() != largura || base.getHeight() != altura) {
+                    BufferedImage resized = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
                     Graphics2D g = resized.createGraphics();
-                    g.drawImage(base, 0, 0, W, H, null);
+                    g.drawImage(base, 0, 0, largura, altura, null);
                     g.dispose();
                     base = resized;
                 }
             } else {
-                base = criarBaseSintetica(W, H);
+                base = criarBaseSintetica(largura, altura);
             }
         } catch (IOException e) {
-            base = criarBaseSintetica(W, H);
+            base = criarBaseSintetica(largura, altura);
         }
     }
 
-    private BufferedImage criarBaseSintetica(int w, int h) {
-        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage criarBaseSintetica(int largura, int altura) {
+        BufferedImage img = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = img.createGraphics();
         try {
-            GradientPaint gp = new GradientPaint(0, 0, new Color(230, 240, 255), 0, h, new Color(210, 220, 240));
+            GradientPaint gp = new GradientPaint(0, 0, new Color(230, 240, 255), 0, altura, new Color(210, 220, 240));
             g.setPaint(gp);
-            g.fillRect(0, 0, w, h);
+            g.fillRect(0, 0, largura, altura);
         } finally {
             g.dispose();
         }
