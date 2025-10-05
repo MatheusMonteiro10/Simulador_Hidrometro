@@ -5,34 +5,37 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-class Display extends JFrame {
+public class Display extends JFrame {
+
     private BufferedImage base;
     private BufferedImage atual;
-    private int ultimoMarco = -1; // controla atualização
+    private int ultimoMarco = -1; // controla a atualizaçao da imagem gerada
 
     private final int largura = 720;
     private final int altura = 480;
+    private final int idSimulador;
+    private final String matriculaSUAP;
 
-    public Display() {
-        super("Hidrômetro - Simulador");
+    public Display(int idSimulador, String matriculaSUAP) {
+        super("Hidrômetro - Simulador " + idSimulador);
+        this.idSimulador = idSimulador;
+        this.matriculaSUAP = matriculaSUAP;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(largura, altura);
-        setLocationRelativeTo(null);
+        setLocation(100 + (idSimulador - 1) * 60, 100 + (idSimulador - 1) * 60);
         criarBase();
         this.atual = deepCopy(base);
         setVisible(true);
     }
 
-    // Atualiza quando acumulado += 1m^3
+    // Atualiza quando acumulado += 1m³
     public void apresentar(double m3, double pressaoBar) {
         int marco = (int) Math.floor(m3 / 1.0);
         if (marco != ultimoMarco) {
             ultimoMarco = marco;
             desenharValores(m3, pressaoBar);
             repaint();
-
             salvarJPEG();
-
             salvarJPEGComNome(marco);
         }
     }
@@ -42,51 +45,25 @@ class Display extends JFrame {
         Graphics2D g = atual.createGraphics();
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-            // Fontes para os valores e unidades
-            Font valorFont = new Font("Monospaced", Font.BOLD, 36);
-            Font unidadeFont = new Font("SansSerif", Font.BOLD, 18);
-            g.setFont(valorFont);
-
+            g.setFont(new Font("Monospaced", Font.BOLD, 36));
             g.setColor(Color.RED);
 
-            // Valor de m³
             String textoM3 = String.format("%.2f", m3);
-            FontMetrics fmM3 = g.getFontMetrics();
-            int textWidthM3 = fmM3.stringWidth(textoM3);
-            int posX_m3 = (getWidth() - textWidthM3) / 2;
+            int posX_m3 = 300;
             int posY_m3 = 150;
+            g.drawString(textoM3 + " m³", posX_m3, posY_m3);
 
-            g.drawString(textoM3, posX_m3, posY_m3);
-
-            // Unidade "m³"
-            g.setFont(unidadeFont);
-            g.drawString("m³", posX_m3 + textWidthM3 + 10, posY_m3 - 5); // Pequeno ajuste vertical
-
-            // Valor da pressão
-            g.setFont(valorFont);
-            String textoPressao = String.format("%.2f", pressaoBar);
-            FontMetrics fmPressao = g.getFontMetrics();
-            int textWidthPressao = fmPressao.stringWidth(textoPressao);
-            int posX_pressao = (getWidth() - textWidthPressao) / 2;
+            String textoPressao = String.format("%.2f bars", pressaoBar);
             int posY_pressao = 250;
-
-            g.drawString(textoPressao, posX_pressao, posY_pressao);
-
-            // Unidade "bars"
-            g.setFont(unidadeFont);
-            g.drawString("bars", posX_pressao + textWidthPressao + 10, posY_pressao - 5);
-
+            g.drawString(textoPressao, posX_m3, posY_pressao);
         } finally {
             g.dispose();
         }
     }
 
-
     private void criarBase() {
         try {
-            File f = new File("C:/Users/pc/Downloads/hidrometro3.jpg");  // Caminho JPEG
+            File f = new File("C:/Users/pc/Downloads/hidrometro3.jpg"); // caminho para o JPEG
             if (f.exists()) {
                 base = ImageIO.read(f);
                 if (base.getWidth() != largura || base.getHeight() != altura) {
@@ -107,38 +84,29 @@ class Display extends JFrame {
     private BufferedImage criarBaseSintetica(int largura, int altura) {
         BufferedImage img = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = img.createGraphics();
-        try {
-            GradientPaint gp = new GradientPaint(0, 0, new Color(230, 240, 255), 0, altura, new Color(210, 220, 240));
-            g.setPaint(gp);
-            g.fillRect(0, 0, largura, altura);
-        } finally {
-            g.dispose();
-        }
+        g.setPaint(new GradientPaint(0, 0, Color.LIGHT_GRAY, 0, altura, Color.WHITE));
+        g.fillRect(0, 0, largura, altura);
+        g.dispose();
         return img;
     }
 
     private void salvarJPEG() {
         try {
-            File arquivo = new File("hidrometro_atualizado.jpg");
+            File arquivo = new File("hidrometro_atualizado_" + idSimulador + ".jpg");
             ImageIO.write(atual, "jpg", arquivo);
         } catch (IOException ignored) {}
     }
 
     private void salvarJPEGComNome(int metroCubico) {
         try {
-            String matriculaSUAP = "202111250035";
             String nomePasta = "Medições_" + matriculaSUAP;
             File pasta = new File(nomePasta);
-            if (!pasta.exists()) {
-                pasta.mkdirs();
-            }
+            if (!pasta.exists()) pasta.mkdirs();
 
             if (metroCubico < 1) return;
 
-            // Mantém valor entre 1 e 99
             int numeroImagem = ((metroCubico - 1) % 99) + 1;
-
-            String nomeArquivo = String.format("%02d.jpeg", numeroImagem);
+            String nomeArquivo = String.format("SIM%d_%02d.jpeg", idSimulador, numeroImagem);
             File arquivo = new File(pasta, nomeArquivo);
             ImageIO.write(atual, "jpg", arquivo);
         } catch (IOException e) {
@@ -149,9 +117,7 @@ class Display extends JFrame {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (atual != null) {
-            g.drawImage(atual, 0, 0, null);
-        }
+        if (atual != null) g.drawImage(atual, 0, 0, null);
     }
 
     private static BufferedImage deepCopy(BufferedImage bi) {
@@ -161,4 +127,5 @@ class Display extends JFrame {
         g.dispose();
         return copy;
     }
+
 }
