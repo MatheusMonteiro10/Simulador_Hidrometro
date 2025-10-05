@@ -89,7 +89,7 @@ public class HidrometroRunnable implements Runnable {
     public synchronized void pause() {
         paused = true;
         LogWindow.getInstance().log(String.format("[SIM %d] Pausado.", id));
-        System.out.printf("[SIM %d] Pausado.", id);
+        System.out.printf("[SIM %d] Pausado.%n", id);
     }
 
     public synchronized void resume() {
@@ -97,7 +97,7 @@ public class HidrometroRunnable implements Runnable {
             paused = false;
             notify();
             LogWindow.getInstance().log(String.format("[SIM %d] Retomado.", id));
-            System.out.printf("[SIM %d] Retomado.", id);
+            System.out.printf("[SIM %d] Retomado.%n", id);
         }
     }
 

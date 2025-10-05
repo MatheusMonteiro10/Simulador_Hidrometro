@@ -29,60 +29,68 @@ public class Run {
 
         while (true) {
             System.out.print("> ");
-            String cmd = sc.next();
+            String cmd = sc.next().toLowerCase();
 
-            if (cmd.equalsIgnoreCase("exit")) {
-                System.out.println("Encerrando simulação...");
-                // encerra todos os simuladores ativos
-                for (HidrometroRunnable sim : simuladores) {
-                    if (sim != null) sim.stop();
-                }
-                System.exit(0);
-            }
-            else if (cmd.equalsIgnoreCase("start")) {
-                int id = sc.nextInt();
-                if (id >= 1 && id <= MAX_SIMULADORES) {
-                    if (simuladores.get(id - 1) == null) {
-                        HidrometroRunnable sim = new HidrometroRunnable(id, MATRICULA);
-                        simuladores.set(id - 1, sim);
-                        Thread t = new Thread(sim, "Simulador-" + id);
-                        threads.set(id - 1, t);
-                        t.start();
-                        System.out.println("Simulador " + id + " iniciado.");
-                    } else {
-                        System.out.println("Simulador " + id + " já está ativo.");
+            switch(cmd) {
+                case "exit":
+                    System.out.println("Encerrando simulação...");
+                    // encerra todos os simuladores ativos
+                    for (HidrometroRunnable sim : simuladores) {
+                        if (sim != null) sim.stop();
                     }
-                }
-            }
-            else if (cmd.equalsIgnoreCase("setVolume")) {
-                int id = sc.nextInt();
-                double volume = sc.nextDouble();
-                if (id >= 1 && id <= MAX_SIMULADORES && simuladores.get(id - 1) != null) {
-                    simuladores.get(id - 1).setVolume(volume);
-                }
-            }
-            else if (cmd.equalsIgnoreCase("setBitola")) {
-                int id = sc.nextInt();
-                double bit = sc.nextDouble();
-                if (id >= 1 && id <= MAX_SIMULADORES && simuladores.get(id - 1) != null) {
-                    simuladores.get(id - 1).setBitola(bit);
-                }
-            }
-            else if (cmd.equalsIgnoreCase("pause")) {
-                int id = sc.nextInt();
-                if (id >= 1 && id <= MAX_SIMULADORES && simuladores.get(id - 1) != null) {
-                    simuladores.get(id - 1).pause();
-                }
-            }
-            else if (cmd.equalsIgnoreCase("resume")) {
-                int id = sc.nextInt();
-                if (id >= 1 && id <= MAX_SIMULADORES && simuladores.get(id - 1) != null) {
-                    simuladores.get(id - 1).resume();
-                }
-            }
-            else {
-                System.out.println("Comando inválido.");
-                sc.nextLine(); // limpa entrada
+                    System.exit(0);
+                    break;
+
+                case "start":
+                    int idStart = sc.nextInt();
+                    if (idStart >= 1 && idStart <= MAX_SIMULADORES) {
+                        if (simuladores.get(idStart - 1) == null) {
+                            HidrometroRunnable sim = new HidrometroRunnable(idStart, MATRICULA);
+                            simuladores.set(idStart - 1, sim);
+                            Thread t = new Thread(sim, "Simulador-" + idStart);
+                            threads.set(idStart - 1, t);
+                            t.start();
+                            System.out.println("Simulador " + idStart + " iniciado.");
+                        } else {
+                            System.out.println("Simulador " + idStart + " já está ativo.");
+                        }
+                    }
+                    break;
+
+                case "setvolume":
+                    int idVolume = sc.nextInt();
+                    double volume = sc.nextDouble();
+                    if (idVolume >= 1 && idVolume <= MAX_SIMULADORES && simuladores.get(idVolume - 1) != null) {
+                        simuladores.get(idVolume - 1).setVolume(volume);
+                    }
+                    break;
+
+                case "setbitola":
+                    int id = sc.nextInt();
+                    double bit = sc.nextDouble();
+                    if (id >= 1 && id <= MAX_SIMULADORES && simuladores.get(id - 1) != null) {
+                        simuladores.get(id - 1).setBitola(bit);
+                    }
+                    break;
+
+                case "pause":
+                    int idPause = sc.nextInt();
+                    if (idPause >= 1 && idPause <= MAX_SIMULADORES && simuladores.get(idPause - 1) != null) {
+                        simuladores.get(idPause - 1).pause();
+                    }
+                    break;
+
+                case "resume":
+                    int idResume = sc.nextInt();
+                    if (idResume >= 1 && idResume <= MAX_SIMULADORES && simuladores.get(idResume - 1) != null) {
+                        simuladores.get(idResume - 1).resume();
+                    }
+                    break;
+
+                default:
+                    System.out.println("Comando inválido.");
+                    sc.nextLine(); // limpa entrada
+                    break;
             }
         }
     }
