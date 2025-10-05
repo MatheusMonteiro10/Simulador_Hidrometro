@@ -21,8 +21,8 @@ public class Run {
         System.out.println("\n=== Controle dos Simuladores de Hidrômetro ===");
         System.out.println("Comandos disponíveis:");
         System.out.println("  start [id]         -> inicia um simulador (1-5)");
-        System.out.println("  setVolume [id] [volume]  -> altera o volume de um simulador");
-        System.out.println("  setBitola [id] [tam]  -> altera a bitola de um simulador");
+        System.out.println("  setvolume [id] [volume]  -> altera o volume de um simulador");
+        System.out.println("  setbitola [id] [tam]  -> altera a bitola de um simulador");
         System.out.println("  pause [id]         -> pausa um simulador");
         System.out.println("  resume [id]        -> retoma um simulador");
         System.out.println("  exit               -> encerra o programa\n");
