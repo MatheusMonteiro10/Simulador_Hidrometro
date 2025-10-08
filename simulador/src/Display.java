@@ -63,7 +63,7 @@ public class Display extends JFrame {
 
     private void criarBase() {
         try {
-            File f = new File("C:/Users/pc/Downloads/hidrometro3.jpg"); // caminho para o JPEG
+            File f = new File("C:/Users/pc/IdeaProjects/Simulador_Hidrometro/simulador/rsc/hidrometro3.jpg"); // caminho para o JPEG
             if (f.exists()) {
                 base = ImageIO.read(f);
                 if (base.getWidth() != largura || base.getHeight() != altura) {
